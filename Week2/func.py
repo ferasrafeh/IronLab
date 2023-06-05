@@ -14,34 +14,16 @@ def low_case(x):
     return x
 
 def clean_gender(x):
-    if x["gender"].any() in ["Femal","female","F"]:
-        x["gender"] == "F"
-    elif x["gender"].any() in ["Male","M"]:
-        x["gender"] == "M"
-    else:
-         x["gender"] == np.nan
-    
+    x["gender"] = x["gender"].replace({"Femal":"F","Male":"M","female":"F"})
     return x["gender"]
-    
 
 def clean_state(x):
-    if x["state"].any() in ["Washington","WA"]:
-        return "WA"
-    
-    elif x["state"].any() in ["Arizona","AZ"]:
-        return "AZ"
-    elif x["state"].any() in ["California","Cali"]:
-        return "Cali"
-    elif x["state"].any() == "Nevada":
-        return "Nev"
-    else:
-        return "Org"
-    
+    x["state"] = x["state"].replace({"Washington":"WA","Arizona":"AZ","California":"Cali","Nevada":"Nev","Oregon":"Org"})
+    return x["state"]
+
 def clean_education(x):
-    if x["education"].any() in ["Bachelors","Bachelor"]:
-        return "Bachelors"
-    else:
-        return x["education"] 
+    x["education"] = x["education"].replace("Bachelor","Bachelors")
+    return x["education"] 
 
 
 def clean_lifetime_value(x):
@@ -54,29 +36,28 @@ def clean_complaints(x):
     x["nb_of_open_complaints"] = x["nb_of_open_complaints"].astype("float64")
     return x["nb_of_open_complaints"]
 
-def drop_null_customers(x):
-    x = x.dropna(subset="customer")
-    return x
-
 def fill_na_lifetime(x):
     x["customer_lifetime_value"] = x["customer_lifetime_value"].fillna(value=x["customer_lifetime_value"].mean())
     return x["customer_lifetime_value"]
 
 def fill_na_gender(x):
-    x["gender"] = x["gender"].fillna(value=x["gender"].mode())
+    x["gender"] = x["gender"].fillna(value="F")
     return x["gender"]
+
+def drop_null_customers(x):
+    x = x.dropna(subset="customer")
+    return x    
 
 def index_reset(x):
     x = x.reset_index(drop=True)
     return x
 
 def numeric_to_int(x):
-    x= x.dropna()
-    x = x.applymap(lambda x: int(x) if isinstance(x,(float)) else x)
+    x = x.dropna()
+    x = x.applymap(lambda x: int(x) if type(x) == float else x)
     return x
 
 def remove_dups(x):
-    x = x.drop_duplicates(ignore_index = True)
     x = x.drop_duplicates(subset = "customer",ignore_index = True)
     return x
 
