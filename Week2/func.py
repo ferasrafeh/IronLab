@@ -27,12 +27,12 @@ def clean_education(x):
 
 
 def clean_lifetime_value(x):
-    x["customer_lifetime_value"] = x["customer_lifetime_value"].str.replace("%","")
+    x["customer_lifetime_value"] = x["customer_lifetime_value"].apply(lambda x: x.replace("%","") if type(x)==str else x )
     x["customer_lifetime_value"] = x["customer_lifetime_value"].astype("float64")
     return x["customer_lifetime_value"]
 
 def clean_complaints(x):
-    x["nb_of_open_complaints"] = x["nb_of_open_complaints"].str[2]
+    x["nb_of_open_complaints"] = x["nb_of_open_complaints"].apply(lambda x: x.split("/")[1] if type(x)==str else x)
     x["nb_of_open_complaints"] = x["nb_of_open_complaints"].astype("float64")
     return x["nb_of_open_complaints"]
 
