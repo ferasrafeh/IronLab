@@ -45,22 +45,20 @@ def fill_na_gender(x):
     return x["gender"]
 
 def drop_null_customers(x):
-    x = x.dropna(subset="customer")
-    return x    
+    x.dropna(subset=["customer"],inplace=True)   
+    return x   
 
 def index_reset(x):
-    x = x.reset_index(drop=True)
+    x.reset_index(drop=True, inplace=True)
     return x
-
+    
 def numeric_to_int(x):
-    x = x.dropna()
-    x = x.applymap(lambda x: int(x) if type(x) == float else x)
-    return x
+   x = x.applymap(lambda x: int(x) if type(x) == float else x)
+   return x  
 
 def remove_dups(x):
-    x = x.drop_duplicates(subset = "customer",ignore_index = True)
+    x.drop_duplicates(subset = "customer",ignore_index = True, inplace=True)
     return x
-
 
 def main(x):
     rename_func(x)
@@ -74,6 +72,6 @@ def main(x):
     fill_na_lifetime(x)
     fill_na_gender(x)
     index_reset(x)
-    numeric_to_int(x)
+    x = numeric_to_int(x)
     remove_dups(x)
     return x
