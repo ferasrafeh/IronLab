@@ -6,6 +6,8 @@ FROM film;
 SELECT floor(avg(length)/60) AS Avg_Hours , floor(avg(length)%60) AS Avg_Minutes
 FROM film;
 
+## Can use concat to join the two outputs 
+
 #2.1
 SELECT DATEDIFF(max(rental_date),min(rental_date)) AS days_company_operating
 FROM rental;
@@ -23,10 +25,14 @@ ELSE "workday"
 END AS DAY_TYPE
 FROM rental;
 
+## or weekday(rental_date)<=5 then "Workday" else "Weekend"
+
 #3
 SELECT title, coalesce(rental_duration,"Not available") AS Rental_Duration
 FROM film
 ORDER BY title;
+
+## OR IFNULL
 
 #4
 select concat(first_name," ",last_name) AS Customer_Name, LEFT(email,3) AS Email
