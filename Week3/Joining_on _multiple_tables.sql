@@ -65,3 +65,20 @@ ON film.film_id = inventory.film_id
 WHERE film.title="Academy Dinosaur" AND inventory.store_id = 1;
  
 # Yes it can be rented from Store 1.
+
+# OR
+
+WITH stock AS
+(
+SELECT i.store_id, COUNT(i.inventory_id) AS copies 
+FROM inventory i
+LEFT JOIN film f ON i.film_id=f.film_id
+WHERE f.title = "Academy Dinosaur"
+GROUP BY i.store_id
+)
+SELECT store_id,
+CASE 
+	WHEN copies > 0 THEN 'YES' 
+	ELSE 'NO' END AS can_be_rented
+FROM stock
+WHERE store_id = 1
