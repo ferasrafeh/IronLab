@@ -74,12 +74,15 @@ ORDER BY sum(payment.amount) DESC
 LIMIT 1);
 
 #8
-SELECT customer.customer_id,sum(payment.amount) AS "Amount Spent"
-FROM customer
-JOIN payment USING (customer_id)
-GROUP BY customer.customer_id
+SELECT payment.customer_id,sum(payment.amount) AS "Amount Spent"
+FROM payment
+GROUP BY payment.customer_id
 HAVING sum(payment.amount) > 
-(SELECT avg(amount)
-FROM payment);
-
+(SELECT avg(customer_total)
+FROM 	(
+			SELECT sum(amount) as customer_total 
+            FROM payment 
+            GROUP BY customer_id
+            ) AS a
+);
 
